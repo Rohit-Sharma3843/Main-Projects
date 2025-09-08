@@ -37,6 +37,7 @@ Built with **HTML, CSS, and JavaScript**, deployed on **Vercel**.
 ### Clone the repository
 
 ```bash
-git clone https://github.com/your-username/weather-app.git
+git clone https://github.com/Rohit-Sharma3843/weather-app.git
 cd weather-app
 ```
+
