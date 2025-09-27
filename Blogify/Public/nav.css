@@ -1,0 +1,167 @@
+* {
+  margin: 0px;
+  text-decoration: none;
+  padding: 0px;
+  box-sizing: border-box;
+}
+body {
+  padding-top: 140px;
+}
+nav {
+  z-index: 5;
+  background-image: url("/Images/navbg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100vw;
+  top: 0;
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 30px;
+  height: 120px;
+}
+#mainimg {
+  width: 70px;
+}
+#title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+#title h1 {
+  color: white;
+}
+#navicons {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+#navicons a {
+  color: white;
+  font-size: 1.2rem;
+  position: relative;
+}
+.links {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  gap: 5px;
+  position: relative;
+  transition: all 0.2s linear;
+}
+.links:hover {
+  transform: scale(1.05);
+}
+.underline {
+  height: 5px;
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 100px;
+  background-color: white;
+  bottom: 1px;
+  transition: all 4s ease-in-out;
+}
+.links:hover .underline {
+  display: block;
+  animation: strike;
+  animation-duration: 0.3s;
+  animation-fill-mode: backwards;
+  animation-iteration-count: 1;
+}
+@keyframes strike {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  25% {
+    width: 25%;
+    opacity: 0.25;
+  }
+  50% {
+    width: 50%;
+    opacity: 0.5;
+  }
+  75% {
+    width: 75%;
+    opacity: 0.75;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+#profile {
+  width: inherit;
+}
+#profilediv {
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 100px;
+}
+#dropdown {
+  display: none;
+}
+#ddimg {
+  width: 50px;
+}
+li {
+  display: flex;
+  gap: 10px;
+}
+li a {
+  transition: all 0.2s linear;
+}
+li:hover a {
+  color: blue;
+}
+#dropdown ul {
+  display: none;
+}
+@media screen and (max-width: 816px) {
+  #navicons {
+    display: none;
+  }
+  #dropdown {
+    width: 40px;
+    display: block;
+  }
+  #profilediv {
+    width: 30px;
+    height: 30px;
+  }
+}
+#dropdown:hover ul {
+  display: block;
+  background: #eeaeca;
+  background: linear-gradient(
+    286deg,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(148, 187, 233, 1) 100%
+  );
+  margin-top: -4px;
+  width: fit-content;
+  align-items: start;
+  font-size: 1.2rem;
+  right: 0px;
+  position: absolute;
+  color: blue;
+  padding: 0px 20px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-direction: column;
+  background-color: pink;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  transition: all 0.2s linear;
+}
+#profiledd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}

@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+}
+nav {
+  width: 100vw;
+  background: linear-gradient(to bottom left, #0f172a, #1e1a78, #0f172a);
+  height: 100px;
+  display: flex;
+  margin-bottom: 10px;
+  color: white;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 10vw;
+}
+#appname {
+  font-size: 2rem;
+}
+#navicons {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 50%;
+  font-size: 1.2rem;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  align-items: center;
+  justify-content: center;
+  margin: 10vh;
+}
+#signinform {
+  display: flex;
+  flex-direction: column;
+  background-color: grey;
+  padding: 20px;
+  border-radius: 10px;
+}
+.error {
+  background-color: beige;
+  padding: 10px;
+  color: red;
+  margin-bottom: 10px;
+  font-weight: bolder;
+  border: 2px solid red;
+  border-radius: 5px;
+}
+a {
+  color: white;
+}

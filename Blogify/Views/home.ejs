@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="home1.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include("./partials/nav") %>
+    <div id="blogs">
+      <% blogs.forEach((blog,index) => { %>
+      <div class="blog gradient-border">
+        <div class="imgdiv">
+          <img class="blogimg" src="<%=blog.coverImgUrl%>" alt="Su30 MKI" />
+        </div>
+        <h3 class="bloghead"><%=blog.title%></h3>
+        <p><%=blog.body%></p>
+        <div class="readmore">
+          <a href="/blog/<%=blog._id%>">Read More</a>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </body>
+</html>

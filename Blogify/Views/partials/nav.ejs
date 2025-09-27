@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/nav.css" />
+  </head>
+  <body>
+    <nav>
+      <div id="title">
+        <img id="mainimg" src="/Images/blog.png" alt="" />
+        <h1>Blogify</h1>
+      </div>
+      <div id="dropdown">
+        <img id="ddimg" src="/Images/dropdown.png" alt="" />
+        <ul>
+          <li>
+            <a href="/"> <img src="/Images/home.png" alt="" /> Home </a>
+          </li>
+          <li>
+            <a href="/blog/addblog">
+              <img src="/Images/addblog.png" alt="" /> Add Blog</a
+            >
+          </li>
+          <li>
+            <a href="/user/logout">
+              <img src="/Images/logout.png" alt="" />
+              Logout
+            </a>
+          </li>
+          <li>
+            <a id="profiledd" href="">
+              <div id="profilediv">
+                <img id="profile" src="/Images/default.png" alt="" />
+              </div>
+              <%=user.name%>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="navicons">
+        <a class="links" href="/">
+          <img src="/Images/home.png" alt="" />
+          Home
+          <div class="underline"></div>
+        </a>
+        <a class="links" href="/blog/addblog">
+          <img src="/Images/addblog.png" alt="" />
+          Add Blog
+          <div class="underline"></div>
+        </a>
+        <a class="links" href="/user/logout">
+          <img src="/Images/logout.png" alt="" />
+          Logout
+          <div class="underline"></div>
+        </a>
+        <a class="links" href="">
+          <div id="profilediv">
+            <img id="profile" src="/Images/default.png" alt="" />
+          </div>
+          <%=user.name%>
+          <div class="underline"></div>
+        </a>
+      </div>
+    </nav>
+  </body>
+  <script>
+    let links = document.querySelectorAll(".links");
+    let underline = document.querySelectorAll(".underline");
+    links.forEach((link, index) => {
+      link.addEventListener("click", () => {
+        underline[i].style.display = "block";
+      });
+    });
+  </script>
+</html>

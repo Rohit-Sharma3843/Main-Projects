@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/viewblog.css" />
+  </head>
+  <body>
+    <%- include("./partials/nav") %>
+    <main>
+      <div class="item" id="blog">
+        <img class="blogimg" src="<%=blog.coverImgUrl%>" alt="" />
+        <div class="userdiv">
+          <div class="userimg">
+            <img src="<%=blog.createdBy.profileImgUrl%>" alt="" />
+          </div>
+          <div class="userdetails">
+            <span class="username"><%=blog.createdBy.fullName%></span>
+            <span class="postdt">Posted Jan 25 , 2025</span>
+          </div>
+        </div>
+        <h1 class="bloghead"><%=blog.title%></h1>
+        <p class="blogcontent"><%=blog.body%></p>
+        <div class="endline"></div>
+        <div class="stats">
+          <div class="leftstats">
+            <div class="likes" id="like">
+              <a href="/blog/like/<%=blog._id%>" style="color: black">
+                <% if (blog.likes.includes(user._id.toString())) { %>
+                <img class="likeimg" src="/Images/heartlike.png" alt="" />
+                <% } else { %>
+                <img class="likeimg" src="/Images/heartunlike.png" alt="" />
+                <%}%>
+                <span><%=blog.likes.length%></span>
+              </a>
+            </div>
+            <a href="#comments" ="">
+              <img class="commentimg" src="/Images/comment.png" alt="" />
+              <span><%=comments.length%></span>
+            </a>
+          </div>
+          <div class="rightstats">
+            <img class="copyimg" src="/Images/copy.png" alt="" />
+          </div>
+        </div>
+      </div>
+      <div class="commentsblock" id="comments">
+        <h1 class="commentshead">Comments</h1>
+        <form
+          action="/comment/<%=blog._id%>"
+          method="post"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+          "
+        >
+          <textarea
+            name="content"
+            cols="20"
+            placeholder="share your thoughts.."
+            id=""
+          ></textarea>
+          <button class="postcoment" type="submit">Post Comment</button>
+        </form>
+        <div class="pplcomments">
+          <% if (locals.comments) { %> <% comments.forEach((c,index) => { %>
+          <div class="comment">
+            <div class="comment-img">
+              <img src="<%=c.createdBy.profileImgUrl%>" alt="" />
+            </div>
+            <div class="comment-stats">
+              <span class="comment-username"
+                ><%=c.createdBy.fullName%><span> Jan 15,2025</span></span
+              >
+              <span class="comment-content"><%=c.content%></span>
+            </div>
+          </div>
+          <% }) %> <% } %>
+        </div>
+      </div>
+    </main>
+    <script>
+      let copy = document.querySelector(".copyimg");
+      let content = document.querySelector(".blogcontent");
+      copy.addEventListener("click", () => {
+        navigator.clipboard
+          .writeText(content.innerHTML)
+          .then(alert("Copied to clipboard"))
+          .catch((err) => alert("Failed to copy."));
+      });
+    </script>
+  </body>
+</html>

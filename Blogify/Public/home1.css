@@ -1,0 +1,135 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+body {
+  background-color: rgb(8, 8, 10);
+  opacity: 1;
+  transition: opacity 2s ease-in-out;
+}
+
+body.fade-out {
+  opacity: 0;
+}
+#blogs {
+  display: grid;
+  margin: 20px 0px;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  box-sizing: border-box;
+  place-items: center;
+  width: 90vw;
+  margin-left: 4vw;
+  z-index: 0;
+}
+.blog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: rgb(15, 15, 18);
+  color: white;
+  width: 300px;
+}
+.imgdiv {
+  overflow: hidden;
+  border-radius: 10px;
+}
+.blog img {
+  width: 100%;
+  border-radius: 6px;
+}
+.blogimg {
+  transition: all 0.25s ease-in-out;
+  height: 300px;
+}
+.blog:hover .blogimg {
+  transform: scale(1.05);
+}
+.gradient-border {
+  --border-width: 3px;
+}
+
+.gradient-border::after {
+  position: absolute;
+  content: "";
+  top: calc(-1 * var(--border-width));
+  left: calc(-1 * var(--border-width));
+  z-index: -1;
+  width: calc(100% + var(--border-width) * 2);
+  height: calc(100% + var(--border-width) * 2);
+  background: linear-gradient(
+    60deg,
+    hsl(224, 85%, 66%),
+    hsl(269, 85%, 66%),
+    hsl(314, 85%, 66%),
+    hsl(359, 85%, 66%),
+    hsl(44, 85%, 66%),
+    hsl(89, 85%, 66%),
+    hsl(134, 85%, 66%),
+    hsl(179, 85%, 66%)
+  );
+  background-size: 300% 300%;
+  background-position: 0 50%;
+  border-radius: 12px;
+  animation: moveGradient 4s alternate infinite;
+}
+
+@keyframes moveGradient {
+  50% {
+    background-position: 100% 50%;
+  }
+}
+.bloghead {
+  font-size: 1.9rem;
+}
+.readmore {
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(
+    90deg,
+    hsla(70, 76%, 65%, 1) 0%,
+    hsla(24, 85%, 52%, 1) 50%,
+    hsla(344, 81%, 54%, 1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 0px;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+.readmore:hover {
+  background: linear-gradient(
+    90deg,
+    rgb(229, 255, 99) 0%,
+    rgb(251, 115, 24) 50%,
+    rgb(255, 45, 101) 100%
+  );
+  box-shadow: 1px 1px 15px 1px black;
+}
+.readmore:hover a {
+  font-weight: bold;
+}
+p {
+  color: rgb(185, 185, 185);
+}
+a {
+  color: white;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+}
+@media screen and (max-width: 385px) {
+  .blog {
+    width: 250px;
+  }
+  #blogs {
+    margin-left: 1vw;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

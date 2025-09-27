@@ -1,0 +1,140 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+body.fade-out {
+  opacity: 0;
+}
+body {
+  opacity: 1;
+  transition: opacity 2s ease-in-out;
+  background: linear-gradient(to top left, #000000, #202152, #71717a);
+  margin: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+.bg-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid white;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+#mainhead {
+  color: #00a36c;
+  background-image: linear-gradient(
+    45deg,
+    #00a36c,
+    #5fbc8b,
+    #a2d5ab,
+    #daf2e4,
+    #8b3a7c
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.8rem;
+}
+p {
+  color: rgb(171, 171, 171);
+  font-size: 1.2rem;
+}
+#mainbox {
+  border: 3px solid #0000;
+  background: linear-gradient(#131219, #131219) padding-box,
+    linear-gradient(var(--angle), #070707, #687aff) border-box;
+  animation: 8s rotate linear infinite;
+  display: flex;
+  margin: 5vw 5vw;
+  border-radius: 10px;
+  gap: 15px;
+  justify-content: center;
+  flex-direction: column;
+  background-color: rgba(128, 128, 128, 0.332);
+  align-items: center;
+  padding: 20px;
+  position: relative;
+}
+@keyframes rotate {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  font-size: 1.3rem;
+  gap: 25px;
+  position: relative;
+}
+input {
+  width: 250px;
+  height: 30px;
+  border-radius: 10px;
+  background-color: transparent;
+  border: 1px solid grey;
+  padding: 5px;
+  color: white;
+  transition: all 0.2s linear;
+}
+::placeholder {
+  color: rgba(128, 176, 190, 0.596);
+}
+input:focus {
+  background-color: rgba(97, 111, 171, 0.488);
+  box-shadow: 1px 1px 10px 1px violet;
+}
+label {
+  color: rgb(155, 155, 155);
+}
+a {
+  color: rgb(190, 166, 245);
+}
+img {
+  width: 30px;
+}
+#pwd {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+button {
+  width: 88%;
+  border-radius: 15px;
+  background-image: linear-gradient(
+    45deg,
+    rgb(0, 0, 0),
+    rgb(125, 69, 125),
+    rgb(125, 69, 125),
+    rgb(0, 0, 0)
+  );
+  padding: 10px;
+  color: rgb(155, 155, 155);
+  font-size: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+button:hover {
+  transform: scale(1.02);
+  color: white;
+  box-shadow: 1px 1px 20px 1px violet;
+}
