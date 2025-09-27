@@ -10,7 +10,7 @@ const blogRouter = require("./Routes/blog");
 const blog = require("./Models/blog");
 const commentRouter = require("./Routes/comment");
 const uri = process.env.MONGO_URI;
-app.use(express.static(path.resolve("./Public")));
+app.use(express.static(path.join(__dirname, "Public")));
 app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "Views"));
@@ -28,5 +28,6 @@ app.listen(PORT, () => {
   console.log("Server is live.");
 });
 module.exports = app;
+
 
 
