@@ -4,12 +4,28 @@
     {
       "src": "index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "Public/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "Views/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
+      "src": "/Public/(.*)",
+      "dest": "/Public/$1"
+    },
+    {
+      "src": "/Views/(.*)",
+      "dest": "/Views/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "index.js"
+      "dest": "/index.js"
     }
   ]
 }
