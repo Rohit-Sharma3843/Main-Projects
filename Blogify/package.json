@@ -7,7 +7,8 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "dev": "tailwindcss -i ./public/css/tailwind.css -o ./public/css/output.css --watch"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.13",
