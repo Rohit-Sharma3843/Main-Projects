@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const secret = "11da1000";
+const secret = process.env.JWT_SECRET || "11da1000";
 function getToken(user) {
   const payload = {
     _id: user._id,
@@ -16,3 +16,4 @@ function validateToken(token) {
   return payload;
 }
 module.exports = { getToken, validateToken };
+
