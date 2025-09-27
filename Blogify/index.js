@@ -9,13 +9,14 @@ const authCheck = require("./Middlewares/authentication");
 const blogRouter = require("./Routes/blog");
 const blog = require("./Models/blog");
 const commentRouter = require("./Routes/comment");
+const uri = process.env.MONGO_URI;
 app.use(express.static(path.resolve("./Public")));
 app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./Views"));
 app.use(cookieParser());
 app.use(authCheck("token"));
-connect("mongodb://localhost:27017/blogify");
+connect(uri);
 app.use("/user", userRouter);
 app.use("/comment", commentRouter);
 app.use("/blog", blogRouter);
@@ -27,3 +28,4 @@ app.listen(PORT, () => {
   console.log("Server is live.");
 });
 module.exports = app;
+
