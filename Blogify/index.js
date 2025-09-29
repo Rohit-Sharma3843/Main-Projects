@@ -21,9 +21,6 @@ app.use("/user", userRouter);
 app.use("/comment", commentRouter);
 app.use("/blog", blogRouter);
 app.get("/", async (req, res) => {
-  if (!req.user) {
-    return res.redirect("/user/signin");
-  }
   const b = await blog.find({});
   res.render("home", { user: req.user, blogs: b });
 });
@@ -31,3 +28,4 @@ app.listen(PORT, () => {
   console.log("Server is live.");
 });
 module.exports = app;
+
