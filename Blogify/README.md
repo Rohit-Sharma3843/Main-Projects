@@ -1,6 +1,5 @@
 # 🚀 Blogify - A Modern Full-Stack Blogging Platform
 
-![Blogify Banner](https://via.placeholder.com/1200x400/0f0f12/8b4ef5?text=Blogify+-+Where+Your+Ideas+Come+to+Life)
 
 <div align="center">
 
@@ -18,17 +17,15 @@
 
 ## 📋 Table of Contents
 
-- [🌟 Features](#-features)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [🚀 Quick Start](#-quick-start)
-- [📁 Project Structure](#-project-structure)
-- [🎨 UI/UX Features](#-uiux-features)
-- [🔐 Authentication System](#-authentication-system)
-- [📸 Image Management](#-image-management)
-- [💾 Database Models](#-database-models)
-- [🔄 API Routes](#-api-routes)
-- [👥 Contributors](#-contributors)
-- [📄 License](#-license)
+- 🌟 Features
+- 🛠️ Tech Stack
+- 🚀 Quick Start
+- 📁 Project Structure
+- 🎨 UI/UX Features
+- 🔐 Authentication System
+- 📸 Image Management
+- 💾 Database Models
+- 🔄 API Routes
 
 ---
 
@@ -68,38 +65,38 @@
 
 ### 🖥️ Frontend
 
-| Technology   | Purpose                   | Icon |
-| ------------ | ------------------------- | ---- |
-| `EJS`        | Templating Engine         | 📄   |
-| `CSS3`       | Styling & Animations      | 🎨   |
-| `JavaScript` | Client-side Interactivity | ⚡   |
-| `HTML5`      | Markup Structure          | 🌐   |
+| Technology   | Purpose                  | 
+| ------------ | ------------------------- |
+| `EJS`        | Templating Engine         |
+| `CSS3`       | Styling & Animations      |
+| `JavaScript` | Client-side Interactivity |
+| `HTML5`      | Markup Structure          |
 
 ### 🔧 Backend
 
-| Technology   | Purpose             | Icon |
-| ------------ | ------------------- | ---- |
-| `Node.js`    | Runtime Environment | 🟢   |
-| `Express.js` | Web Framework       | 🚂   |
-| `MongoDB`    | Database            | 🍃   |
-| `Mongoose`   | ODM Library         | 🦊   |
+| Technology   | Purpose             |
+| ------------ | ------------------- |
+| `Node.js`    | Runtime Environment |
+| `Express.js` | Web Framework       |
+| `MongoDB`    | Database            |
+| `Mongoose`   | ODM Library         |
 
 ### 🔐 Security & Storage
 
-| Technology   | Purpose          | Icon |
-| ------------ | ---------------- | ---- |
-| `JWT`        | Authentication   | 🛡️   |
-| `bcrypt`     | Password Hashing | 🔒   |
-| `Cloudinary` | Image Storage    | ☁️   |
-| `Multer`     | File Uploads     | 📤   |
+| Technology   | Purpose           |
+| ------------ | ----------------  |
+| `JWT`        | Authentication      |
+| `bcrypt`     | Password Hashing    |
+| `Cloudinary` | Image Storage       |
+| `Multer`     | File Uploads        |
 
 ### 📦 Development
 
-| Technology      | Purpose               | Icon |
-| --------------- | --------------------- | ---- |
-| `Nodemon`       | Development Server    | 👀   |
-| `Dotenv`        | Environment Variables | 🔧   |
-| `Cookie-Parser` | Cookie Management     | 🍪   |
+| Technology      | Purpose                |
+| --------------- | ---------------------  |
+| `Nodemon`       | Development Server       |
+| `Dotenv`        | Environment Variables    |
+| `Cookie-Parser` | Cookie Management        |
 
 ---
 
