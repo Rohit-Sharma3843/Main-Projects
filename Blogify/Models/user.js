@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { createHmac, randomBytes } = require("crypto");
 const { getToken } = require("../Services/authentication");
-s;
+const connect = require("../connection");
 const userSchema = new mongoose.Schema(
   {
     fullName: {
@@ -46,6 +46,7 @@ userSchema.pre("save", function (next) {
   next();
 });
 userSchema.static("matchPwdAndGenToken", async function (email, password) {
+  await connect(process.env.MONGO_URI);
   const u = await this.findOne({ email });
   if (!u) {
     throw new Error("User not found.");
@@ -58,3 +59,4 @@ userSchema.static("matchPwdAndGenToken", async function (email, password) {
 });
 const user = mongoose.model("user", userSchema);
 module.exports = user;
+
