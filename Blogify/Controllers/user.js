@@ -18,7 +18,13 @@ async function signinPost(req, res) {
   const pwd = req.body.password;
   try {
     const token = await user.matchPwdAndGenToken(mail, pwd);
-    res.cookie("token", token);
+    res.cookie("token", token, {
+  httpOnly: true, 
+  secure: true,        
+  sameSite: "Lax",      
+  maxAge: 24 * 60 * 60 * 1000,
+  path: "/"
+});
     return res.redirect("/");
   } catch (error) {
     return res.render("signin", { error: "Invalid user credentials." });
@@ -29,4 +35,5 @@ async function logout(req, res) {
   res.redirect("/user/signin");
 }
 module.exports = { signinGet, signupGet, signupPost, signinPost, logout };
+
 
