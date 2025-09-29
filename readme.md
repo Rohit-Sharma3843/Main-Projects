@@ -1,11 +1,9 @@
 # 🚀 My GitHub Projects Repository
 
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)](https://www.java.com/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 
 ---
 
@@ -14,36 +12,57 @@ I am a **Computer Engineering student** at Army Institute of Technology, Pune, p
 
 ---
 
-## 🗂 Repository Structure
+## 🗂 Projects in This Repository
 
-| Folder/Project     | Description |
+| Project Name       | Description |
 |-------------------|-------------|
-| `ML-Projects`      | Machine learning and deep learning projects, e.g., crop yield prediction, classification, regression. |
-| `Web-Projects`     | Full-stack web development projects using Node.js, React, Tailwind CSS, and Firebase. |
-| `Python-Scripts`   | Automation scripts and small Python utilities. |
-| `Networking`       | Network simulation, socket programming, and security exercises. |
-| `Misc`             | Other projects showcasing problem-solving and creativity. |
+| `Blogify`          | A blogging platform project built using web technologies (HTML, CSS, JS, Node.js). |
+| `FakeNewsDetector` | A machine learning project to detect fake news using NLP and classification models. |
+| `Project1`         | Placeholder project folder for experimentation and learning. |
+| `WeatherApp`       | A web application that fetches and displays live weather data using API integration. |
+| `memory`           | A memory card matching game built with JavaScript, HTML, and CSS for interactive gameplay. |
 
 ---
 
 ## 🛠 Technologies & Tools
-- **Programming Languages:** Python, Java, C++, JavaScript  
-- **Web Development:** Node.js, React.js, Tailwind CSS, Firebase  
-- **Databases:** MySQL, PostgreSQL, Firebase Firestore  
-- **Machine Learning/AI:** scikit-learn, TensorFlow, Keras, PyTorch  
-- **Tools & IDEs:** Git, GitHub, VS Code, Postman  
+- **Programming Languages:** Python, JavaScript, HTML, CSS  
+- **Web Development:** Node.js, React.js, Tailwind CSS  
+- **Machine Learning/AI:** scikit-learn, NLP libraries  
+- **Tools & IDEs:** Git, GitHub, VS Code  
 
 ---
 
 ## 📌 Highlights
-- Real-world problem-solving with data-driven approaches  
-- Full-stack web projects with **JWT authentication** and **API integration**  
-- ML/AI models for practical applications, like **crop yield prediction**  
-- Focus on **clean, modular, and reusable code**
+- Full-stack web projects with **API integration** and interactive UI  
+- Machine learning applications for real-world problem-solving  
+- Focus on **modular, reusable, and clean code**  
+- Projects suitable for building a tech portfolio aligned with defense and AI applications
 
 ---
 
 ## 📂 How to Use
 1. Clone the repository:
    ```bash
-   git clone https://github.com/<your-username>/my-projects.git
+   git clone https://github.com/Rohit-Sharma3843/Main-Projects
+   ```
+## 📬 Get in Touch
+
+Connect with me through any of the platforms below:
+
+<div align="center">
+
+<a href="mailto:sharma9103867592@gmail.com" target="_blank">
+  <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email Badge"/>
+</a>
+
+<a href="https://www.linkedin.com/in/flanker-h/" target="_blank">
+  <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
+</a>
+
+<a href="https://github.com/Rohit-Sharma3843" target="_blank">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Badge"/>
+</a>
+
+</div>
+
+> 💬 I’m always open to discussing new projects, coding challenges, or opportunities to contribute to technology for the Indian Air Force.
