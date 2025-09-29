@@ -13,7 +13,7 @@ const commentRouter = require("./Routes/comment");
 app.use(express.static(path.resolve("./Public")));
 app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
-app.set("views", path.resolve("./Views"));
+app.set("views", path.join(__dirname, "Views"));
 app.use(cookieParser());
 app.use(authCheck("token"));
 connect(process.env.MONGO_URI);
@@ -28,4 +28,5 @@ app.listen(PORT, () => {
   console.log("Server is live.");
 });
 module.exports = app;
+
 
