@@ -20,15 +20,15 @@ I am a **Computer Engineering student** at Army Institute of Technology, Pune, p
 | `FakeNewsDetector` | A machine learning project to detect fake news using NLP and classification models. |
 | `Project1`         | Placeholder project folder for experimentation and learning. |
 | `WeatherApp`       | A web application that fetches and displays live weather data using API integration. |
-| `memory`           | A memory card matching game built with JavaScript, HTML, and CSS for interactive gameplay. |
+| `memory`           | A memory card matching game built with React.js for interactive gameplay. |
 
 ---
 
 ## 🛠 Technologies & Tools
 - **Programming Languages:** Python, JavaScript, HTML, CSS  
 - **Web Development:** Node.js, React.js, Tailwind CSS  
-- **Machine Learning/AI:** scikit-learn, NLP libraries  
-- **Tools & IDEs:** Git, GitHub, VS Code  
+- **Machine Learning/AI:** scikit-learn, NLP libraries , Matplotlib, Seaborn, Numpy, Pandas 
+- **Tools & IDEs:** Git, GitHub, VS Code, Codeblocks  
 
 ---
 
