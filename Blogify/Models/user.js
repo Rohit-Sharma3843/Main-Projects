@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { createHmac, randomBytes } = require("crypto");
 const { getToken } = require("../Services/authentication");
+const connect = require("../Services/connection");
+
 const userSchema = new mongoose.Schema(
   {
     fullName: {
@@ -33,27 +35,27 @@ const userSchema = new mongoose.Schema(
 );
 userSchema.pre("save", function (next) {
   const user = this;
-  if (!user.isModified()) {
-    return;
-  }
-  const salt = randomBytes(16).toString();
+  if (!user.isModified()) return next();
+
+  const salt = randomBytes(16).toString("hex");
   const hashPwd = createHmac("sha256", salt)
     .update(user.password)
     .digest("hex");
+
   user.salt = salt;
   user.password = hashPwd;
   next();
 });
 userSchema.static("matchPwdAndGenToken", async function (email, password) {
+  await connect(process.env.MONGO_URI);
+
   const u = await this.findOne({ email });
-  if (!u) {
-    throw new Error("User not found.");
-  }
+  if (!u) throw new Error("User not found.");
+
   const hash = createHmac("sha256", u.salt).update(password).digest("hex");
-  if (hash !== u.password) {
-    throw new Error("Incorrect Password");
-  }
+  if (hash !== u.password) throw new Error("Incorrect Password");
+
   return getToken(u);
 });
-const user = mongoose.model("user", userSchema);
-module.exports = user;
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+module.exports = User;
