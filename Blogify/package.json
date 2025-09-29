@@ -7,18 +7,18 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "tailwindcss -i ./public/css/tailwind.css -o ./public/css/output.css --watch"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.13",
-    "cloudinary": "^1.40.0",
+    "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.2",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.1",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
     "nodemon": "^3.1.10"
   },
@@ -27,8 +27,5 @@
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
     "tailwindcss": "^4.1.13"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   }
 }
