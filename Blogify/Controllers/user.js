@@ -26,6 +26,7 @@ async function signinPost(req, res) {
 }
 async function logout(req, res) {
   res.clearCookie("token");
-  res.redirect("signin");
+  res.redirect("/user/signin");
 }
 module.exports = { signinGet, signupGet, signupPost, signinPost, logout };
+
