@@ -20,14 +20,26 @@ connect(process.env.MONGO_URI);
 app.use("/user", userRouter);
 app.use("/comment", commentRouter);
 app.use("/blog", blogRouter);
+function modify(b) {
+  for (let i = 0; i < b.length; i++) {
+    let x = b[i].body.split(" ");
+    if (x.length > 15) {
+      let y = x.slice(0, 15).join(" ");
+      b[i].body = y + "....";
+      console.log(b[i].body);
+    }
+  }
+}
 app.get("/", async (req, res) => {
   const b = await blog.find({});
+  modify(b);
   res.render("home", { user: req.user, blogs: b });
 });
 app.listen(PORT, () => {
   console.log("Server is live.");
 });
 module.exports = app;
+
 
 
 
