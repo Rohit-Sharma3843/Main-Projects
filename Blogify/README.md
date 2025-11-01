@@ -119,7 +119,7 @@ mongod --version
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Rohit-Sharma3843/blogify.git
+git clone https://github.com/Rohit-Sharma3843/Main-Projects/blob/main/Blogify.git
 cd blogify
 ```
 
