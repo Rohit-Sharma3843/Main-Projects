@@ -119,8 +119,11 @@ mongod --version
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Rohit-Sharma3843/Main-Projects/blob/main/Blogify.git
-cd blogify
+git clone --no-checkout https://github.com/Rohit-Sharma3843/Main-Projects.git
+cd Main-Projects
+git sparse-checkout init --cone
+git sparse-checkout set Blogify
+cd Blogify
 ```
 
 ### 2. Install dependencies
