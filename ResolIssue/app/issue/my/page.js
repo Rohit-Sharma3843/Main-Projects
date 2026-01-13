@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import {supabase} from "@/utils/supabase";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
@@ -6,12 +7,15 @@ import Issue from "@/components/issue";
 
 const MyIssues = async () => {
     const {getUser, isAuthenticated} = getKindeServerSession();
-    
-    if(!isAuthenticated){
+    const auth=await isAuthenticated();
+    if(!auth){
         redirect("/");
     }
     
     const user = await getUser();
+    if(!user){
+        redirect("/");
+    }
     const {data} = await supabase.from("issues").select("*").eq("created_by", user.id);
     
     return (

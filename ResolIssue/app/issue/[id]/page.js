@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { supabase } from "@/utils/supabase";
 import Image from "next/image";
 import ShowComment from "@/components/show_comment";

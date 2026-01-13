@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { supabase } from "@/utils/supabase";
 import Link from "next/link";
 import Issue from "@/components/issue";

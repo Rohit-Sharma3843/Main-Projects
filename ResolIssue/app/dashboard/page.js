@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import { redirect } from 'next/navigation';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
