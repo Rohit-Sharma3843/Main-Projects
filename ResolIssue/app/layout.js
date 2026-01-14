@@ -1,7 +1,7 @@
 import './globals.css'
 import Navbar from '../components/navbar'
 
-const Layout = ({ children }) => {
+export default function RootLayout({ children }) {
   return (
     <html>
       <body className="min-h-screen bg-gray-50">
@@ -19,5 +19,3 @@ const Layout = ({ children }) => {
     </html>
   )
 }
-
-export default Layout
