@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import IssueForm from "@/components/issue_form";
 const CreateIssue=async()=>{
     return <>
