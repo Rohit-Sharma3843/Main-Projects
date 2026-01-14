@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 Civic Issue Resolution System
 
-## Getting Started
+A modern, community-driven platform to **report, track, and resolve civic issues** with transparency and accountability.
 
-First, run the development server:
+---
+
+## 📌 1. Project Overview
+
+- 📝 Citizens can report civic issues with title, description, images, and precise location
+- 👍 Community members can like and comment to indicate priority
+- 🔄 Issues move through clear states: pending, in-progress, resolved
+- 🛡️ Admin users moderate content and update issue status
+- 📊 Dashboards help users track their contribution and impact
+
+---
+
+## 🧱 2. System Architecture
+
+- 🧩 Component-based design for maintainability
+- 🔐 Role-based access for users and admins
+- 📡 Centralized data storage with real-time reads
+- 🗂️ Clean separation between UI, auth, and data layers
+
+---
+
+## 🛠️ 3. Tech Stack
+
+- ⚛️ Next.js (App Router)
+- 🎨 Tailwind CSS
+- 🗄️ Supabase (database + storage)
+- 🔐 Kinde Authentication
+- ☁️ Cloudinary (image handling)
+- 🧠 Lucide Icons
+
+---
+
+## 📂 4. Key Components
+
+- 🧭 Navbar – navigation and session handling
+- 📝 IssueForm – create a new issue
+- 📄 Issue – issue card and summary view
+- 👍 Like – upvote functionality
+- 💬 PostComment – add comments
+- 👀 ShowComment – render discussion threads
+- 🔄 UpdateStatus – admin-only status control
+- 🔐 Signup – user onboarding
+
+---
+
+## 👥 5. User Roles
+
+- 👤 Normal User
+
+  - Report issues
+  - Like and comment
+  - Track personal reports
+
+- 🛡️ Admin
+  - Remove fake or invalid issues
+  - Update issue status
+  - Maintain platform discipline
+
+---
+
+## 🔐 6. Authentication & Security
+
+- Secure login and session handling
+- Permission checks before sensitive actions
+- Controlled admin operations
+
+---
+
+## ☁️ 7. Deployment Readiness
+
+- Cloud-friendly architecture
+- Scalable backend services
+- Stateless frontend design
+
+---
+
+## ⬇️ 8. Download & Run Locally
 
 ```bash
+git clone https://github.com/Rohit-Sharma3843/Main-Projects/tree/main/ResolIssue.git
+cd ResolIssue
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
