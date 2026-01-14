@@ -14,9 +14,10 @@ import {
   BarChart3
 } from 'lucide-react';
 
-const Navbar = () => {
+const Navbar = async() => {
   const { isAuthenticated, user } = useKindeBrowserClient();
   const [isOpen, setIsOpen] = useState(false);
+  const auth=await isAuthenticated();
   const menuItems = [
     { href: "/issue", label: "Issues", icon: Flag },
     { href: "/issue/create", label: "Raise an Issue", icon: PlusCircle },
@@ -39,7 +40,7 @@ const Navbar = () => {
               </span>
             </div>
             <div className="flex items-center gap-3">
-              {isAuthenticated && user && (
+              {auth && user && (
                 <div className="hidden md:flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
                     {user.picture ? (
@@ -58,7 +59,7 @@ const Navbar = () => {
                   </div>
                 </div>
               )}
-              {isAuthenticated && (
+              {auth && (
                 <button
                   onClick={() => setIsOpen(!isOpen)}
                   className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors md:hidden"
@@ -70,7 +71,7 @@ const Navbar = () => {
                   )}
                 </button>
               )}
-              {isAuthenticated && (
+              {auth && (
                 <div className="hidden md:flex items-center gap-1">
                   {menuItems.map((item) => {
                     const Icon = item.icon;
@@ -90,7 +91,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      {isOpen && isAuthenticated && (
+      {isOpen && auth && (
         <>
           <div 
             className="fixed inset-0 bg-black/50 z-40 md:hidden"
