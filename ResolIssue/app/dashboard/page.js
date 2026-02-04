@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
@@ -178,3 +179,4 @@ const Stat = ({ title, value, icon }) => (
 );
 
 export default Dashboard;
+
