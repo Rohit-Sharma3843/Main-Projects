@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 import {
@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 
 const Dashboard = async () => {
- 
   const session = getKindeServerSession();
   const isAuthenticated = await session.isAuthenticated();
   const user = await session.getUser();
@@ -27,10 +26,20 @@ const Dashboard = async () => {
     redirect("/");
   }
 
- 
-  const supabase = createServerComponentClient({ cookies });
+  const cookieStore = cookies();
 
- 
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
+    {
+      cookies: {
+        get(name) {
+          return cookieStore.get(name)?.value;
+        }
+      }
+    }
+  );
+
   const { data: existingUser, error } = await supabase
     .from("users")
     .select("*")
@@ -45,14 +54,12 @@ const Dashboard = async () => {
     });
   }
 
- 
   const { data: userIssues = [] } = await supabase
     .from("issues")
     .select("*")
     .eq("created_by", user.id)
     .order("created_at", { ascending: false });
 
- 
   const { count: totalIssues = 0 } = await supabase
     .from("issues")
     .select("*", { count: "exact", head: true });
@@ -74,16 +81,13 @@ const Dashboard = async () => {
       ? ((userIssues.length / totalIssues) * 100).toFixed(1)
       : 0;
 
- 
   return (
     <div className="min-h-screen mt-16 bg-gradient-to-br from-gray-900 via-black to-gray-900">
       <div className="container mx-auto px-4 py-8">
-
         <h1 className="text-4xl font-bold text-center text-white mb-10">
           Dashboard
         </h1>
 
-        {/* USER CARD */}
         <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-6 mb-8 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold">
@@ -109,7 +113,6 @@ const Dashboard = async () => {
           </LogoutLink>
         </div>
 
- 
         <div className="grid grid-cols-2 gap-6 mb-10">
           <Link
             href="/issue/create"
@@ -128,7 +131,6 @@ const Dashboard = async () => {
           </Link>
         </div>
 
-   
         <div className="grid md:grid-cols-4 gap-6 mb-10">
           <Stat title="Total Issues" value={totalIssues} icon={<BarChart3 />} />
           <Stat title="Resolved" value={resolvedIssues} icon={<CheckCircle />} />
@@ -140,7 +142,6 @@ const Dashboard = async () => {
           />
         </div>
 
- 
         {userIssues.length > 0 && (
           <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-6">
             <h2 className="text-2xl font-semibold text-white mb-4">
@@ -166,7 +167,6 @@ const Dashboard = async () => {
   );
 };
 
- 
 const Stat = ({ title, value, icon }) => (
   <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-6">
     <div className="flex items-center gap-2 text-white mb-2">
