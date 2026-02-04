@@ -12,6 +12,7 @@
     "@kinde-oss/kinde-auth-nextjs": "^2.11.0",
     "@react-google-maps/api": "^2.20.8",
     "@supabase/auth-helpers-nextjs": "^0.15.0",
+    "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.90.1",
     "cloudinary": "^2.8.0",
     "framer-motion": "^12.25.0",
