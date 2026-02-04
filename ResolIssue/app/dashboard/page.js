@@ -1,220 +1,291 @@
-"use client"; 
+export const dynamic = "force-dynamic";
+import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
+import { redirect } from 'next/navigation';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { supabase } from '@/utils/supabase';
+import Link from 'next/link';
+import { 
+  BarChart3, 
+  AlertCircle, 
+  MessageSquare, 
+  MapPin, 
+  Shield, 
+  TrendingUp,
+  FileText,
+  LogOut,
+  PlusCircle,
+  CheckCircle,
+  Clock,
+  Award
+} from 'lucide-react';
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+const Dashboard = async () => {
+  const { isAuthenticated, getUser } = getKindeServerSession();
+  const auth = await isAuthenticated();
+  const user = await getUser();
 
-const useKindeAuth = () => {
-  if (typeof window === 'undefined') {
-    return { isAuthenticated: false, user: null, isLoading: true };
+  if (!auth) {
+    redirect("/");
   }
-  return require("@kinde-oss/kinde-auth-nextjs").useKindeAuth();
-};
 
-const LogoutLink = ({ children }) => {
-  const { LogoutLink: KindeLogoutLink } = require("@kinde-oss/kinde-auth-nextjs");
-  return <KindeLogoutLink>{children}</KindeLogoutLink>;
-};
+  const {getPermissions}=getKindeServerSession();
+  const p=await getPermissions();
+  console.log(p);
+  const { data: userData, error } = await supabase
+    .from("users")
+    .select()
+    .eq('id', user.id);
 
-const Icon = ({ name, ...props }) => {
-  const [IconComponent, setIconComponent] = useState(null);
-  
-  useEffect(() => {
-    const loadIcon = async () => {
-      const icons = await import("lucide-react");
-      setIconComponent(() => icons[name]);
-    };
-    loadIcon();
-  }, [name]);
-  
-  if (!IconComponent) return <div className="w-6 h-6" />;
-  return <IconComponent {...props} />;
-};
+  if (error) {
+    console.error("Error fetching user data:", error);
+    redirect("/");
+  }
 
-export default function Dashboard() {
-  const router = useRouter();
-  const { isAuthenticated, user, isLoading } = useKindeAuth();
-  const [isClient, setIsClient] = useState(false);
-  const [userIssues, setUserIssues] = useState([]);
-  const [totalIssues, setTotalIssues] = useState(0);
-  const [resolvedIssues, setResolvedIssues] = useState(0);
-  const [pendingIssues, setPendingIssues] = useState(0);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (isClient && !isLoading && !isAuthenticated) {
-      router.replace("/");
-    }
-  }, [isAuthenticated, isLoading, router, isClient]);
-
- 
-  useEffect(() => {
-    if (!isClient || !user || isLoading) return;
-
-    const loadData = async () => {
-      try {
-  
-        const { supabase } = await import("@/utils/supabase");
- 
-        const { data: existingUser } = await supabase
-          .from("users")
-          .select("id")
-          .eq("id", user.id)
-          .single();
-
-        if (!existingUser) {
-          await supabase.from("users").insert({
-            id: user.id,
-            email: user.email,
-            name: user.given_name || user.email.split("@")[0]
-          });
-        }
-        const { data: issues = [] } = await supabase
-          .from("issues")
-          .select("*")
-          .eq("created_by", user.id)
-          .order("created_at", { ascending: false });
-
-        setUserIssues(issues || []);
-
-        const [
-          { count: total },
-          { count: resolved },
-          { count: pending }
-        ] = await Promise.all([
-          supabase.from("issues").select("*", { count: "exact", head: true }),
-          supabase
-            .from("issues")
-            .select("*", { count: "exact", head: true })
-            .eq("created_by", user.id)
-            .eq("status", "resolved"),
-          supabase
-            .from("issues")
-            .select("*", { count: "exact", head: true })
-            .eq("created_by", user.id)
-            .eq("status", "pending")
-        ]);
-
-        setTotalIssues(total || 0);
-        setResolvedIssues(resolved || 0);
-        setPendingIssues(pending || 0);
-      } catch (error) {
-        console.error("Error loading dashboard data:", error);
+  // Create user if doesn't exist
+  if (userData && userData.length === 0) {
+    const { error: insertError } = await supabase.from("users").insert([
+      {
+        email: user.email,
+        name: user.given_name,
+        id: user.id,
       }
-    };
-
-    loadData();
-  }, [user, isLoading, isClient]);
-
-  if (!isClient || isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    ]);
+    
+    if (insertError) {
+      console.error("Error creating user:", insertError);
+    }
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  // Fetch user's issues
+  const { data: userIssues } = await supabase
+    .from("issues")
+    .select("*")
+    .eq("created_by", user.id);
 
-  const contribution = totalIssues > 0
-    ? ((userIssues.length / totalIssues) * 100).toFixed(1)
-    : 0;
+  // Fetch stats
+  const { count: totalIssues } = await supabase
+    .from("issues")
+    .select('*', { count: 'exact', head: true });
+
+  const { count: userResolvedIssues } = await supabase
+    .from("issues")
+    .select('*', { count: 'exact', head: true })
+    .eq("created_by", user.id)
+    .eq("status", "resolved");
+
+  const { count: userPendingIssues } = await supabase
+    .from("issues")
+    .select('*', { count: 'exact', head: true })
+    .eq("created_by", user.id)
+    .eq("status", "pending");
+
+  // Calculate user's contribution percentage
+  const userContribution = userIssues?.length ? ((userIssues.length / totalIssues) * 100).toFixed(1) : 0;
 
   return (
-    <div className="min-h-screen mt-16 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+    <div className="min-h-screen mt-15 bg-linear-to-br from-gray-900 via-black to-gray-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-6 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold">
-              {user?.given_name?.charAt(0) || user?.email?.charAt(0) || "U"}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <span className="bg-linear-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Dashboard
+            </span>
+          </h1>
+          <p className="text-gray-400 text-lg max-w-3xl mx-auto">
+            Welcome to ResolIssue - Your community platform for reporting, tracking, and resolving local issues
+          </p>
+        </div>
+
+        {/* User Welcome Card */}
+        <div className="bg-linear-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 mb-8 shadow-xl">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-20 h-20 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-white">
+                    {user.given_name?.charAt(0) || "U"}
+                  </span>
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-gray-900"></div>
+              </div>
+              
+              <div>
+                <h2 className="text-2xl font-bold text-white">
+                  Welcome back, {user.given_name}!
+                </h2>
+                <p className="text-gray-400">{user.email}</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <Shield className="w-4 h-4 text-green-400" />
+                  <span className="text-sm text-gray-400">Verified Community Member</span>
+                </div>
+              </div>
             </div>
+
+            {/* Logout Button */}
+            <LogoutLink>
+              <button className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-semibold rounded-xl transition-all duration-300">
+                <LogOut className="w-5 h-5" />
+                Logout
+              </button>
+            </LogoutLink>
+          </div>
+        </div>
+
+        {/* App Description */}
+        <div className="bg-linear-to-br from-blue-900/20 to-purple-900/20 backdrop-blur-sm border border-blue-700/30 rounded-2xl p-8 mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-linear-to-br from-blue-500/20 to-purple-500/20 rounded-lg">
+              <AlertCircle className="w-6 h-6 text-blue-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-white">About ResolIssue</h3>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <p className="text-xl font-semibold text-white">
-                Welcome back, {user?.given_name || user?.email?.split("@")[0]}
+              <p className="text-gray-300 leading-relaxed mb-6">
+                ResolIssue is a community-driven platform designed to help residents report, track, and resolve local issues efficiently. From broken street lights to potholes and cleanliness concerns, our platform connects community members with local authorities.
               </p>
-              <p className="text-gray-400">{user?.email}</p>
-              <div className="flex items-center gap-2 text-green-400 text-sm mt-1">
-                <Icon name="Shield" size={14} />
-                Verified Member
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <span className="text-gray-300">Real-time issue tracking</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MessageSquare className="w-5 h-5 text-blue-400" />
+                  <span className="text-gray-300">Community discussions</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-5 h-5 text-yellow-400" />
+                  <span className="text-gray-300">Location-based reporting</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="w-5 h-5 text-purple-400" />
+                  <span className="text-gray-300">Progress monitoring</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <h4 className="text-xl font-semibold text-white mb-4">Quick Actions</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <Link
+                  href="/issue/create"
+                  className="p-4 bg-linear-to-br from-blue-600/20 to-blue-700/20 border border-blue-600/30 rounded-xl hover:border-blue-500 transition-colors"
+                >
+                  <PlusCircle className="w-6 h-6 text-blue-400 mb-2" />
+                  <p className="font-medium text-white">Report Issue</p>
+                  <p className="text-sm text-gray-400">Report a new problem</p>
+                </Link>
+                
+                <Link
+                  href="/issue/my"
+                  className="p-4 bg-linear-to-br from-purple-600/20 to-purple-700/20 border border-purple-600/30 rounded-xl hover:border-purple-500 transition-colors"
+                >
+                  <FileText className="w-6 h-6 text-purple-400 mb-2" />
+                  <p className="font-medium text-white">My Issues</p>
+                  <p className="text-sm text-gray-400">View your reports</p>
+                </Link>
               </div>
             </div>
           </div>
-
-          <LogoutLink>
-            <button className="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-5 py-2 rounded-xl text-white transition-colors">
-              <Icon name="LogOut" size={18} />
-              Logout
-            </button>
-          </LogoutLink>
         </div>
 
-    
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
-          <Link href="/issue/create" className="p-6 bg-blue-600/20 border border-blue-600 rounded-xl hover:bg-blue-600/30 transition-colors">
-            <Icon name="PlusCircle" className="text-blue-400 mb-2" size={24} />
-            <p className="text-white font-semibold">Report Issue</p>
-            <p className="text-gray-400 text-sm">Submit a new issue</p>
-          </Link>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-linear-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-blue-500/20 rounded-lg">
+                <BarChart3 className="w-6 h-6 text-blue-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Total Issues</h3>
+            </div>
+            <p className="text-3xl font-bold text-white mb-2">{totalIssues || 0}</p>
+            <p className="text-sm text-gray-400">Community-wide reports</p>
+          </div>
 
-          <Link href="/issue/my" className="p-6 bg-purple-600/20 border border-purple-600 rounded-xl hover:bg-purple-600/30 transition-colors">
-            <Icon name="FileText" className="text-purple-400 mb-2" size={24} />
-            <p className="text-white font-semibold">My Issues</p>
-            <p className="text-gray-400 text-sm">View your submitted issues</p>
-          </Link>
+          <div className="bg-linear-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-green-500/20 rounded-lg">
+                <CheckCircle className="w-6 h-6 text-green-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Your Resolved</h3>
+            </div>
+            <p className="text-3xl font-bold text-white mb-2">{userResolvedIssues || 0}</p>
+            <p className="text-sm text-gray-400">Issues you helped fix</p>
+          </div>
+
+          <div className="bg-linear-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-yellow-500/20 rounded-lg">
+                <Clock className="w-6 h-6 text-yellow-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Pending</h3>
+            </div>
+            <p className="text-3xl font-bold text-white mb-2">{userPendingIssues || 0}</p>
+            <p className="text-sm text-gray-400">Awaiting resolution</p>
+          </div>
+
+          <div className="bg-linear-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <Award className="w-6 h-6 text-purple-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Contribution</h3>
+            </div>
+            <p className="text-3xl font-bold text-white mb-2">{userContribution}%</p>
+            <p className="text-sm text-gray-400">Of total issues</p>
+          </div>
         </div>
 
-    
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
-          <Stat title="Total Issues" value={totalIssues} iconName="BarChart3" />
-          <Stat title="Resolved" value={resolvedIssues} iconName="CheckCircle" />
-          <Stat title="Pending" value={pendingIssues} iconName="Clock" />
-          <Stat title="Contribution %" value={`${contribution}%`} iconName="Award" />
-        </div>
+        {/* Recent Activity */}
+        {userIssues && userIssues.length > 0 && (
+          <div className="bg-linear-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-linear-to-br from-green-500/20 to-emerald-500/20 rounded-lg">
+                <FileText className="w-6 h-6 text-green-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-white">Your Recent Issues</h3>
+            </div>
 
-     
-        {userIssues.length > 0 && (
-          <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-6">
-            <h2 className="text-2xl font-semibold text-white mb-4">
-              Recent Issues
-            </h2>
-            <div className="space-y-3">
-              {userIssues.slice(0, 5).map(issue => (
+            <div className="space-y-4">
+              {userIssues.slice(0, 5).map((issue) => (
                 <Link
                   key={issue.id}
                   href={`/issue/${issue.id}`}
-                  className="block p-4 bg-gray-900 rounded-xl hover:bg-gray-800 transition-colors"
+                  className="block p-4 bg-gray-900/30 border border-gray-700/50 rounded-xl hover:border-gray-600 transition-colors"
                 >
-                  <p className="text-white font-semibold">{issue.title}</p>
-                  <p className="text-sm text-gray-400">
-                    {issue.status} • {issue.category} • {issue.location}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">{issue.title}</h4>
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className={`px-2 py-1 rounded-full ${
+                          issue.status === 'resolved' 
+                            ? 'bg-green-500/20 text-green-300' 
+                            : issue.status === 'in-progress'
+                            ? 'bg-yellow-500/20 text-yellow-300'
+                            : 'bg-red-500/20 text-red-300'
+                        }`}>
+                          {issue.status}
+                        </span>
+                        <span className="text-gray-400">{issue.category}</span>
+                        <span className="text-gray-400">{issue.location}</span>
+                      </div>
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                      {new Date(issue.created_at).toLocaleDateString()}
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
           </div>
         )}
+
       </div>
     </div>
   );
-}
+};
 
-function Stat({ title, value, iconName }) {
-  return (
-    <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-4 md:p-6">
-      <div className="flex items-center gap-2 text-white mb-2">
-        <Icon name={iconName} size={20} />
-        <p className="font-semibold text-sm md:text-base">{title}</p>
-      </div>
-      <p className="text-2xl md:text-3xl font-bold text-white">{value}</p>
-    </div>
-  );
-}
-
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
+export default Dashboard;
