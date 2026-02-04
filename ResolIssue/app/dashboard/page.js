@@ -1,11 +1,15 @@
-export const dynamic = "force-dynamic";
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+"use client";
 
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+import {
+  useKindeAuth,
+  LogoutLink
+} from "@kinde-oss/kinde-auth-nextjs";
+
+import { supabase } from "@/utils/supabase";
 
 import {
   BarChart3,
@@ -18,64 +22,78 @@ import {
   Award
 } from "lucide-react";
 
-const Dashboard = async () => {
-  const session = getKindeServerSession();
-  const isAuthenticated = await session.isAuthenticated();
-  const user = await session.getUser();
+export default function Dashboard() {
+  const router = useRouter();
+  const { isAuthenticated, user, isLoading } = useKindeAuth();
 
-  if (!isAuthenticated || !user) {
-    redirect("/");
-  }
+  const [userIssues, setUserIssues] = useState([]);
+  const [totalIssues, setTotalIssues] = useState(0);
+  const [resolvedIssues, setResolvedIssues] = useState(0);
+  const [pendingIssues, setPendingIssues] = useState(0);
 
-  const cookieStore = cookies();
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY,
-    {
-      cookies: {
-        get(name) {
-          return cookieStore.get(name)?.value;
-        }
-      }
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace("/");
     }
-  );
+  }, [isAuthenticated, isLoading, router]);
 
-  const { data: existingUser, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+  useEffect(() => {
+    if (!user) return;
 
-  if (!existingUser && !error) {
-    await supabase.from("users").insert({
-      id: user.id,
-      email: user.email,
-      name: user.given_name
-    });
+    const loadData = async () => {
+      const { data: existingUser } = await supabase
+        .from("users")
+        .select("id")
+        .eq("id", user.id)
+        .single();
+
+      if (!existingUser) {
+        await supabase.from("users").insert({
+          id: user.id,
+          email: user.email,
+          name: user.given_name
+        });
+      }
+
+      const { data: issues = [] } = await supabase
+        .from("issues")
+        .select("*")
+        .eq("created_by", user.id)
+        .order("created_at", { ascending: false });
+
+      setUserIssues(issues);
+
+      const { count: total } = await supabase
+        .from("issues")
+        .select("*", { count: "exact", head: true });
+
+      const { count: resolved } = await supabase
+        .from("issues")
+        .select("*", { count: "exact", head: true })
+        .eq("created_by", user.id)
+        .eq("status", "resolved");
+
+      const { count: pending } = await supabase
+        .from("issues")
+        .select("*", { count: "exact", head: true })
+        .eq("created_by", user.id)
+        .eq("status", "pending");
+
+      setTotalIssues(total || 0);
+      setResolvedIssues(resolved || 0);
+      setPendingIssues(pending || 0);
+    };
+
+    loadData();
+  }, [user]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-white">
+        Loading...
+      </div>
+    );
   }
-
-  const { data: userIssues = [] } = await supabase
-    .from("issues")
-    .select("*")
-    .eq("created_by", user.id)
-    .order("created_at", { ascending: false });
-
-  const { count: totalIssues = 0 } = await supabase
-    .from("issues")
-    .select("*", { count: "exact", head: true });
-
-  const { count: resolvedIssues = 0 } = await supabase
-    .from("issues")
-    .select("*", { count: "exact", head: true })
-    .eq("created_by", user.id)
-    .eq("status", "resolved");
-
-  const { count: pendingIssues = 0 } = await supabase
-    .from("issues")
-    .select("*", { count: "exact", head: true })
-    .eq("created_by", user.id)
-    .eq("status", "pending");
 
   const contribution =
     totalIssues > 0
@@ -85,9 +103,6 @@ const Dashboard = async () => {
   return (
     <div className="min-h-screen mt-16 bg-gradient-to-br from-gray-900 via-black to-gray-900">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-center text-white mb-10">
-          Dashboard
-        </h1>
 
         <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-6 mb-8 flex justify-between items-center">
           <div className="flex items-center gap-4">
@@ -115,18 +130,12 @@ const Dashboard = async () => {
         </div>
 
         <div className="grid grid-cols-2 gap-6 mb-10">
-          <Link
-            href="/issue/create"
-            className="p-6 bg-blue-600/20 border border-blue-600 rounded-xl"
-          >
+          <Link href="/issue/create" className="p-6 bg-blue-600/20 border border-blue-600 rounded-xl">
             <PlusCircle className="text-blue-400 mb-2" />
             <p className="text-white font-semibold">Report Issue</p>
           </Link>
 
-          <Link
-            href="/issue/my"
-            className="p-6 bg-purple-600/20 border border-purple-600 rounded-xl"
-          >
+          <Link href="/issue/my" className="p-6 bg-purple-600/20 border border-purple-600 rounded-xl">
             <FileText className="text-purple-400 mb-2" />
             <p className="text-white font-semibold">My Issues</p>
           </Link>
@@ -136,11 +145,7 @@ const Dashboard = async () => {
           <Stat title="Total Issues" value={totalIssues} icon={<BarChart3 />} />
           <Stat title="Resolved" value={resolvedIssues} icon={<CheckCircle />} />
           <Stat title="Pending" value={pendingIssues} icon={<Clock />} />
-          <Stat
-            title="Contribution %"
-            value={`${contribution}%`}
-            icon={<Award />}
-          />
+          <Stat title="Contribution %" value={`${contribution}%`} icon={<Award />} />
         </div>
 
         {userIssues.length > 0 && (
@@ -163,20 +168,20 @@ const Dashboard = async () => {
             ))}
           </div>
         )}
+
       </div>
     </div>
   );
-};
+}
 
-const Stat = ({ title, value, icon }) => (
-  <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-6">
-    <div className="flex items-center gap-2 text-white mb-2">
-      {icon}
-      <p className="font-semibold">{title}</p>
+function Stat({ title, value, icon }) {
+  return (
+    <div className="bg-gray-800/60 border border-gray-700 rounded-2xl p-6">
+      <div className="flex items-center gap-2 text-white mb-2">
+        {icon}
+        <p className="font-semibold">{title}</p>
+      </div>
+      <p className="text-3xl font-bold text-white">{value}</p>
     </div>
-    <p className="text-3xl font-bold text-white">{value}</p>
-  </div>
-);
-
-export default Dashboard;
-
+  );
+}
