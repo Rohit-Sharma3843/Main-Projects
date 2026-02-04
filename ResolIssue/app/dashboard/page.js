@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+"use client"
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components'
 import { redirect } from 'next/navigation';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
@@ -289,3 +289,4 @@ const Dashboard = async () => {
 };
 
 export default Dashboard;
+
