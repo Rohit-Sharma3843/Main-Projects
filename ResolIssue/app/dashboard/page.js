@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 "use client";
 
 import { useEffect, useState } from "react";
@@ -185,3 +187,4 @@ function Stat({ title, value, icon }) {
     </div>
   );
 }
+
