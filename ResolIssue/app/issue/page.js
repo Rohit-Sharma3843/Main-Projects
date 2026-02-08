@@ -11,8 +11,9 @@ const Issues = async () => {
     if(!auth){
         redirect("/");
     }
-    const res = await supabase.from("issues").select();
+    const res = await supabase.from("issues").select("*");
     const data = res.data;
+    console.log(data);
     
     return (
         <div className="min-h-screen w-full flex flex-col items-center justify-center bg-linear-to-b from-gray-900 to-black py-8 px-4">

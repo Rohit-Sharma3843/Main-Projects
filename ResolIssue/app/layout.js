@@ -4,6 +4,9 @@ import Navbar from '../components/navbar'
 export default function RootLayout({ children }) {
   return (
     <html>
+      <head>
+        <link rel="icon" href="/iaf.jpg" sizes="any" />
+      </head>
       <body className="min-h-screen bg-gray-50">
         <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
           <Navbar />

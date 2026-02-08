@@ -14,10 +14,10 @@ import {
   BarChart3
 } from 'lucide-react';
 
-const Navbar = async() => {
+const Navbar = () => {
   const { isAuthenticated, user } = useKindeBrowserClient();
   const [isOpen, setIsOpen] = useState(false);
-  const auth=await isAuthenticated();
+  const auth=isAuthenticated;
   const menuItems = [
     { href: "/issue", label: "Issues", icon: Flag },
     { href: "/issue/create", label: "Raise an Issue", icon: PlusCircle },
