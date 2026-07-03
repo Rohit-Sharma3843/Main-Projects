@@ -115,7 +115,6 @@ def validate(req: IssueRequest):
         "valid": bool(final),
         "prediction": final,
         "votes": {
-            "svc": svc,
             "naive_bayes": nb,
             "random_forest": rfc,
             "logistic_regression": log
