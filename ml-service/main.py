@@ -10,30 +10,9 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-# -----------------------------
-# Ensure NLTK downloads ONCE at runtime
-# -----------------------------
-def safe_nltk_download():
-    try:
-        nltk.data.find("tokenizers/punkt")
-    except LookupError:
-        nltk.download("punkt")
-
-    try:
-        nltk.data.find("corpora/stopwords")
-    except LookupError:
-        nltk.download("stopwords")
-
-    try:
-        nltk.data.find("corpora/wordnet")
-    except LookupError:
-        nltk.download("wordnet")
-
-
-safe_nltk_download()
 
 # -----------------------------
-# FastAPI setup
+# FASTAPI APP
 # -----------------------------
 app = FastAPI()
 
@@ -45,27 +24,57 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# -----------------------------
-# Load models
-# -----------------------------
-svc_model = joblib.load("svc_model.pkl")
-nb_model = joblib.load("nb_model.pkl")
-rfc_model = joblib.load("rfc_model.pkl")
-log_model = joblib.load("logistic_regression.pkl")
-tfidf = joblib.load("tfidf_vectorizer.pkl")
 
 # -----------------------------
-# NLP tools
+# NLTK SAFE INITIALIZATION
 # -----------------------------
+def setup_nltk():
+    resources = [
+        "punkt",
+        "punkt_tab",
+        "stopwords",
+        "wordnet"
+    ]
+
+    for r in resources:
+        try:
+            nltk.data.find(r)
+        except LookupError:
+            nltk.download(r)
+
+
+setup_nltk()
+
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
 
+
+# -----------------------------
+# LOAD MODELS (SAFE PATH)
+# -----------------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+svc_model = joblib.load(os.path.join(BASE_DIR, "svc_model.pkl"))
+nb_model = joblib.load(os.path.join(BASE_DIR, "nb_model.pkl"))
+rfc_model = joblib.load(os.path.join(BASE_DIR, "rfc_model.pkl"))
+log_model = joblib.load(os.path.join(BASE_DIR, "logistic_regression.pkl"))
+tfidf = joblib.load(os.path.join(BASE_DIR, "tfidf_vectorizer.pkl"))
+
+
+# -----------------------------
+# REQUEST SCHEMA
+# -----------------------------
 class IssueRequest(BaseModel):
     title: str
     description: str
 
+
+# -----------------------------
+# PREPROCESS FUNCTION (NLTK BASED)
+# -----------------------------
 def preprocess(text: str):
     text = text.lower()
+
     tokens = word_tokenize(text)
 
     cleaned = []
@@ -73,13 +82,22 @@ def preprocess(text: str):
         if w.isalpha() and w not in stop_words:
             cleaned.append(w)
 
-    lemmas = [lemmatizer.lemmatize(w) for w in cleaned]
-    return " ".join(lemmas)
+    lemmatized = [lemmatizer.lemmatize(w) for w in cleaned]
 
+    return " ".join(lemmatized)
+
+
+# -----------------------------
+# HEALTH CHECK
+# -----------------------------
 @app.get("/")
 def home():
     return {"status": "ML service running"}
 
+
+# -----------------------------
+# VALIDATE ENDPOINT
+# -----------------------------
 @app.post("/validate")
 def validate(req: IssueRequest):
 
