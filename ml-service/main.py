@@ -10,108 +10,80 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-import uvicorn
+# -----------------------------
+# Ensure NLTK downloads ONCE at runtime
+# -----------------------------
+def safe_nltk_download():
+    try:
+        nltk.data.find("tokenizers/punkt")
+    except LookupError:
+        nltk.download("punkt")
 
-# --------------------------------------------------
-# Load NLTK data
-# --------------------------------------------------
+    try:
+        nltk.data.find("corpora/stopwords")
+    except LookupError:
+        nltk.download("stopwords")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    try:
+        nltk.data.find("corpora/wordnet")
+    except LookupError:
+        nltk.download("wordnet")
 
-nltk.data.path.append(os.path.join(BASE_DIR, "nltk_data"))
 
-# --------------------------------------------------
-# FastAPI
-# --------------------------------------------------
+safe_nltk_download()
 
-app = FastAPI(
-    title="ML Validation Service",
-    version="1.0.0"
-)
-
-# --------------------------------------------------
-# CORS
-# --------------------------------------------------
+# -----------------------------
+# FastAPI setup
+# -----------------------------
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # Change to your frontend URL in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --------------------------------------------------
-# Load Models
-# --------------------------------------------------
+# -----------------------------
+# Load models
+# -----------------------------
+svc_model = joblib.load("svc_model.pkl")
+nb_model = joblib.load("nb_model.pkl")
+rfc_model = joblib.load("rfc_model.pkl")
+log_model = joblib.load("logistic_regression.pkl")
+tfidf = joblib.load("tfidf_vectorizer.pkl")
 
-svc_model = joblib.load(os.path.join(BASE_DIR, "svc_model.pkl"))
-nb_model = joblib.load(os.path.join(BASE_DIR, "nb_model.pkl"))
-rfc_model = joblib.load(os.path.join(BASE_DIR, "rfc_model.pkl"))
-log_model = joblib.load(os.path.join(BASE_DIR, "logistic_regression.pkl"))
-tfidf = joblib.load(os.path.join(BASE_DIR, "tfidf_vectorizer.pkl"))
-
-# --------------------------------------------------
-# NLP
-# --------------------------------------------------
-
+# -----------------------------
+# NLP tools
+# -----------------------------
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
-
-# --------------------------------------------------
-# Request Schema
-# --------------------------------------------------
 
 class IssueRequest(BaseModel):
     title: str
     description: str
 
-# --------------------------------------------------
-# Preprocessing
-# --------------------------------------------------
-
 def preprocess(text: str):
-
     text = text.lower()
-
     tokens = word_tokenize(text)
 
-    tokens = [
-        token
-        for token in tokens
-        if token.isalpha() and token not in stop_words
-    ]
+    cleaned = []
+    for w in tokens:
+        if w.isalpha() and w not in stop_words:
+            cleaned.append(w)
 
-    tokens = [
-        lemmatizer.lemmatize(token)
-        for token in tokens
-    ]
-
-    return " ".join(tokens)
-
-# --------------------------------------------------
-# Health Check
-# --------------------------------------------------
+    lemmas = [lemmatizer.lemmatize(w) for w in cleaned]
+    return " ".join(lemmas)
 
 @app.get("/")
 def home():
-
-    return {
-        "status": "running",
-        "service": "ML Validation API"
-    }
-
-# --------------------------------------------------
-# Validation Endpoint
-# --------------------------------------------------
+    return {"status": "ML service running"}
 
 @app.post("/validate")
 def validate(req: IssueRequest):
 
-    combined_text = preprocess(
-        req.title + " " + req.description
-    )
-
+    combined_text = preprocess(req.title + " " + req.description)
     X = tfidf.transform([combined_text])
 
     svc = int(svc_model.predict(X)[0])
@@ -120,33 +92,15 @@ def validate(req: IssueRequest):
     log = int(log_model.predict(X)[0])
 
     votes = [svc, nb, rfc, log]
-
-    positive = votes.count(1)
-    negative = votes.count(0)
-
-    final_prediction = 1 if positive >= negative else 0
+    final = 1 if votes.count(1) >= votes.count(0) else 0
 
     return {
-        "valid": bool(final_prediction),
-        "prediction": final_prediction,
+        "valid": bool(final),
+        "prediction": final,
         "votes": {
             "svc": svc,
             "naive_bayes": nb,
             "random_forest": rfc,
-            "logistic_regression": log,
+            "logistic_regression": log
         }
     }
-
-# --------------------------------------------------
-# Railway Entry
-# --------------------------------------------------
-
-if __name__ == "__main__":
-
-    port = int(os.environ.get("PORT", 8000))
-
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=port,
-    )
