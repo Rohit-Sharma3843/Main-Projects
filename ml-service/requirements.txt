@@ -3,8 +3,8 @@ uvicorn
 numpy
 pandas
 scikit-learn
+scipy
 joblib
 nltk
-scipy
-pydantic
 python-multipart
+pydantic
