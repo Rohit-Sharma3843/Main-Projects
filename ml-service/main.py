@@ -104,12 +104,11 @@ def validate(req: IssueRequest):
     combined_text = preprocess(req.title + " " + req.description)
     X = tfidf.transform([combined_text])
 
-    svc = int(svc_model.predict(X)[0])
     nb = int(nb_model.predict(X)[0])
     rfc = int(rfc_model.predict(X)[0])
     log = int(log_model.predict(X)[0])
-
-    votes = [svc, nb, rfc, log]
+    
+    votes = [nb, rfc, log]
     final = 1 if votes.count(1) >= votes.count(0) else 0
 
     return {
